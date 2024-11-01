@@ -57,7 +57,7 @@ namespace ThreeWindowsApp
         {
             //UInt128 phone = trackBar1.Value * 305185094;
             ////string formattedPhoneNumber = string.Format("{0:(###) ###-####}", phone);
-            //label1.Text = "Номер: " + phone.ToString();
+            label1.Text = "Номер: " + trackBar1.Value.ToString();
         }
     }
 }
