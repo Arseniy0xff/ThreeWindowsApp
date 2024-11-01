@@ -1,16 +1,12 @@
 using System.Diagnostics;
 
-namespace ThreeWindowsApp
-{
-    public partial class Menu : Form
-    {
-        public Menu()
-        {
+namespace ThreeWindowsApp {
+    public partial class Menu : Form {
+        public Menu() {
             InitializeComponent();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
+        private void button2_Click(object sender, EventArgs e) {
             // —оздаем экземпл€р новой формы
             Settings formSettings = new Settings(this);
             // ќткрываем новую форму
@@ -20,15 +16,13 @@ namespace ThreeWindowsApp
             this.Hide();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
+        private void button1_Click(object sender, EventArgs e) {
             Simulation formSim = new Simulation(this);
             formSim.Show();
             this.Hide();
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
+        private void button3_Click(object sender, EventArgs e) {
             Debug.WriteLine("Hello, World!");
         }
     }

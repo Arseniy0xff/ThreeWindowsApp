@@ -1,10 +1,8 @@
 ﻿
 using System.Diagnostics;
 
-namespace ThreeWindowsApp
-{
-    partial class Menu
-    {
+namespace ThreeWindowsApp {
+    partial class Menu {
         /// <summary>
         ///  Required designer variable.
         /// </summary>
@@ -14,8 +12,7 @@ namespace ThreeWindowsApp
         ///  Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
+        protected override void Dispose(bool disposing) {
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -29,8 +26,7 @@ namespace ThreeWindowsApp
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
@@ -80,8 +76,7 @@ namespace ThreeWindowsApp
             ResumeLayout(false);
         }
 
-        private void Menu_Load(object sender, EventArgs e)
-        {
+        private void Menu_Load(object sender, EventArgs e) {
             Debug.WriteLine("Main");
             //throw new NotImplementedException();
         }

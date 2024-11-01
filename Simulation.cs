@@ -3,20 +3,18 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ThreeWindowsApp
-{
-    public partial class Simulation : Form
-    {
+namespace ThreeWindowsApp {
+    public partial class Simulation : Form {
         private Menu MainForm;
         private System.Windows.Forms.Timer timer; // Явное указание на Timer из Windows.Forms
         private float ballX, ballY; // Позиция шара
         private float ballSize = 30; // Размер шара
-        private float ballSpeedX = 5; // Скорость по оси X
+        private float ballSpeedX = 10; // Скорость по оси X
         private float ballSpeedY = 3; // Скорость по оси Y
 
-        public Simulation(Menu Form)
-        {
+        public Simulation(Menu Form) {
             MainForm = Form;
+            this.FormClosing += new FormClosingEventHandler(Simulation_FormClosing);
             InitializeComponent();
 
             // Включение двойной буферизации
@@ -28,24 +26,21 @@ namespace ThreeWindowsApp
 
             // Настройка таймера
             timer = new System.Windows.Forms.Timer(); // Явное указание на Timer из Windows.Forms
-            timer.Interval = 20; // Интервал в миллисекундах
+            timer.Interval = 10; // Интервал в миллисекундах
             timer.Tick += Timer_Tick;
             timer.Start();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
+        private void button1_Click(object sender, EventArgs e) {
             MainForm.Show();
             this.Close();
         }
 
-        private void Simulation_Load(object sender, EventArgs e)
-        {
+        private void Simulation_Load(object sender, EventArgs e) {
             Debug.WriteLine("Siml");
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
+        private void Timer_Tick(object sender, EventArgs e) {
             // Обновление позиции шара
             ballX += ballSpeedX;
             ballY += ballSpeedY;
@@ -64,8 +59,7 @@ namespace ThreeWindowsApp
             this.Invalidate();
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
+        protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e); // Вызов базового метода
 
             Graphics g = e.Graphics;
@@ -73,5 +67,23 @@ namespace ThreeWindowsApp
             // Рисование шара
             g.FillEllipse(Brushes.Blue, ballX, ballY, ballSize, ballSize);
         }
+
+
+        private void Simulation_FormClosing(object sender, FormClosingEventArgs e) {
+            // Здесь вы можете выполнить проверку или показать диалог
+            DialogResult result = MessageBox.Show("Stop Simulation?", "Realy?", MessageBoxButtons.YesNo);
+
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                MainForm.Show();
+            }
+            //base.OnFormClosing(e);
+
+        }
+
     }
 }
