@@ -26,9 +26,10 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
+            components = new System.ComponentModel.Container();
             button1 = new Button();
+            timer1 = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // button1
@@ -40,6 +41,11 @@
             button1.Text = "Back";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
+            // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Tick += timer1_Tick;
             // 
             // Simulation
             // 
@@ -56,5 +62,6 @@
         #endregion
 
         private Button button1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
