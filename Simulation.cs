@@ -48,6 +48,11 @@ namespace ThreeWindowsApp {
                 weight[i] = (double)0.4;
                 buff[i] = 0;
                 a[i] = 0;
+                if (i > 50) {
+                    weight[i] = (double)0.4;
+                } else {
+                    weight[i] = (double)0.1;
+                }
 
 
                 //list.AddToEnd(i);
