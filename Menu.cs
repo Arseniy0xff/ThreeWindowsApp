@@ -31,5 +31,11 @@ namespace ThreeWindowsApp {
             formSim.Show();
             this.Hide();
         }
+
+        private void button5_Click(object sender, EventArgs e) {
+            Simulation3Dc formSim = new Simulation3Dc(this);
+            formSim.Show();
+            this.Hide();
+        }
     }
 }

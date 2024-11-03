@@ -1,5 +1,5 @@
 ﻿namespace ThreeWindowsApp {
-    partial class Simulation3D {
+    partial class Simulation3Dc {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -25,8 +25,8 @@
         private void InitializeComponent() {
             components = new System.ComponentModel.Container();
             button1 = new Button();
-            timer1 = new System.Windows.Forms.Timer(components);
             button2 = new Button();
+            timer1 = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // button1
@@ -37,13 +37,7 @@
             button1.TabIndex = 0;
             button1.Text = "Back";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
-            // timer1
-            // 
-            timer1.Enabled = true;
-            timer1.Interval = 10;
-            timer1.Tick += timer1_Tick;
+            button1.Click += button1_Click_1;
             // 
             // button2
             // 
@@ -55,22 +49,28 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
-            // Simulation3D
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 10;
+            timer1.Tick += timer1_Tick_1;
+            // 
+            // Simulation3Dc
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(button2);
             Controls.Add(button1);
-            Name = "Simulation3D";
-            Text = "Simulation3D";
+            Name = "Simulation3Dc";
+            Text = "Simulation3Dc";
             ResumeLayout(false);
         }
 
         #endregion
 
         private Button button1;
-        private System.Windows.Forms.Timer timer1;
         private Button button2;
+        private System.Windows.Forms.Timer timer1;
     }
 }
