@@ -14,7 +14,7 @@ namespace ThreeWindowsApp {
 
         private Menu MainForm;
 
-        private double rsl = 0.8; // resolution
+        private double rsl = 0.2; // resolution
         private double[,] buff;
         private double[,] atm;
         private double[,] weight;
@@ -26,7 +26,7 @@ namespace ThreeWindowsApp {
         private int X;
         private bool run_sim = true;
 
-        private int frame_rendering = 20;
+        private int frame_rendering = 1;
         private int frame_counter = 0;
 
 
@@ -36,7 +36,7 @@ namespace ThreeWindowsApp {
             this.FormClosing += new FormClosingEventHandler(Simulation_FormClosing);
 
 
-            timer1.Interval = 1;
+            timer1.Interval = 100;
             MainForm = Form;
 
             this.DoubleBuffered = true;
@@ -63,20 +63,25 @@ namespace ThreeWindowsApp {
             }
 
 
-            //DrawRectangle(atm, (int)X / 2, (int)Y / 2, 4, 4,true, 100);
-            //DrawStripedCircle(atm, (int)X / 2, (int)Y / 2, 3, 100, 0);
-            DrawRectangle(atm, (int)X / 2, (int)Y / 2, 1, Y / 8, true, 50);
 
-            DrawRectangle(weight, (int)X / 2 - X / 8, (int)Y / 2, X / 4, 1, true, 0);
-            DrawRectangle(weight, (int)X / 2 - X / 8, (int)Y / 2 + Y / 8, X / 4, 1, true, 0);
 
-            DrawRectangle(atm, (int)X / 2 - X / 8, (int)Y / 2, X / 4, 1, true, 0);
-            DrawRectangle(atm, (int)X / 2 - X / 8, (int)Y / 2 + Y / 8, X / 4, 1, true, 0);
+            DrawWave(atm, X / 2, Y / 2, 4, 30, 50);
+            DrawWave(atm, X / 2 - 8, Y / 2, 4, 30, 50);
 
-            //DrawRectangle(atm, (int)X / 2-10, (int)Y / 2, 20, 1, true, 0);
-            //DrawRectangle(atm, (int)X / 2-10, (int)Y / 2 + 4, 20, 1, true, 0);
+            //DrawStripedCircle(atm, (int)X / 2, (int)Y / 2, 10, 50, 0);
+            //DrawRectangle(atm, X/2, Y/2, 1, 10, true, 50);
+            //DrawRectangle(atm, X / 2 - 4, Y / 2, 1, 10, true, 50);
 
-            DrawCircle(weight, (int)X / 2 + X / 8 + Y / 8, (int)Y / 2 + Y / 10 + Y / 10, Y / 8, true, 1.2);
+            //DrawRectangle(atm, (int)X / 2, (int)Y / 2, 1, Y / 8, true, 50);
+
+            //DrawRectangle(weight, (int)X / 2 - X / 8, (int)Y / 2, X / 4, 1, true, 0);
+            //DrawRectangle(weight, (int)X / 2 - X / 8, (int)Y / 2 + Y / 8, X / 4, 1, true, 0);
+
+            //DrawRectangle(atm, (int)X / 2 - X / 8, (int)Y / 2, X / 4, 1, true, 0);
+            //DrawRectangle(atm, (int)X / 2 - X / 8, (int)Y / 2 + Y / 8, X / 4, 1, true, 0);
+
+
+            //DrawCircle(weight, (int)X / 2 + X / 8 + Y / 8, (int)Y / 2 + Y / 10 + Y / 10, Y / 8, true, 1.2);
 
             //for (int y = 1; y < Y - 1; y++) {
             //    if (y < Y / 2 - 5 || y > Y / 2 + 5) {
@@ -137,7 +142,7 @@ namespace ThreeWindowsApp {
             for (int y = 0; y < Y; y++) {
                 for (int x = 0; x < X; x++) {
                     // Нормализуем значение atm для отображения
-                    int colorValue = (int)Math.Clamp(Math.Pow(rndr[y, x] + 1, 2), 0, 255);
+                    int colorValue = (int)Math.Clamp(Math.Pow(atm[y, x] + 1, 2), 0, 255);
 
                     Color color = Color.FromArgb(colorValue, colorValue, colorValue);
                     using (Brush brush = new SolidBrush(color)) {
@@ -188,16 +193,69 @@ namespace ThreeWindowsApp {
                 for (int x = -radius; x <= radius; x++) {
                     // Проверяем, находится ли точка внутри круга
                     if (x * x + y * y <= radius * radius) {
-                        // Определяем, какой цвет использовать в зависимости от x-координаты
-                        if (x % 2 == 0) {
-                            arr[centerY + y, centerX + x] = value1; // Используем первое значение для четных x
-                        } else {
-                            arr[centerY + y, centerX + x] = value2; // Используем второе значение для нечетных x
-                        }
+                        // Вычисляем расстояние от центра
+                        double distance = Math.Sqrt(x * x + y * y);
+                        // Нормализуем расстояние в диапазоне от 0 до 1
+                        double normalizedDistance = distance / radius;
+
+                        // Вычисляем затухающее значение
+                        double fadeValue = (1 - normalizedDistance);
+
+                        // Используем синус для плавного разбиения на полосы
+                        double sineValue = Math.Sin((distance / radius) * Math.PI * 2); // Синус от 0 до 2π
+                        sineValue = (sineValue + 1) / 2; // Приводим значение в диапазон от 0 до 1
+
+                        // Интерполяция между value1 и value2
+                        double interpolatedValue = value1 * (1 - sineValue) + value2 * sineValue;
+
+                        // Применяем затухание
+                        arr[centerY + y, centerX + x] = interpolatedValue * fadeValue;
                     }
                 }
             }
         }
+
+        static void DrawWave(double[,] arr, int startX, int startY, int width, int height, double maxValue) {
+            int centerX = startX + width / 2;
+            int centerY = startY + height / 2;
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    // Вычисляем расстояние от центра
+                    double distance = Math.Sqrt(Math.Pow(centerX - (startX + x), 2) + Math.Pow(centerY - (startY + y), 2));
+
+                    // Нормализуем расстояние и вычисляем значение
+                    double normalizedDistance = distance / (Math.Sqrt((width / 2) * (width / 2) + (height / 2) * (height / 2)));
+                    double value = maxValue * (1 - normalizedDistance);
+
+                    // Устанавливаем значение в массив, если оно положительное
+                    if (value > 0) {
+                        arr[startY + y, startX + x] = value;
+                    }
+                }
+            }
+        }
+
+
+        // Функция для рисования ряби на воде
+        static void DrawRipples(double[,] arr, int centerX, int centerY, double amplitude, double frequency, double speed) {
+            int rows = arr.GetLength(0);
+            int cols = arr.GetLength(1);
+
+            for (int y = 0; y < rows; y++) {
+                for (int x = 0; x < cols; x++) {
+                    // Вычисляем расстояние от центра
+                    double distance = Math.Sqrt(Math.Pow(centerX - x, 2) + Math.Pow(centerY - y, 2));
+
+                    // Вычисляем значение ряби с использованием синусоидальной функции
+                    double value = amplitude * Math.Sin(frequency * distance - speed * y);
+
+                    // Устанавливаем значение в массив
+                    arr[y, x] = value;
+                }
+            }
+        }
+
 
         private void button1_Click(object sender, EventArgs e) {
             MainForm.Show();

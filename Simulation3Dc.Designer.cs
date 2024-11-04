@@ -27,6 +27,7 @@
             button1 = new Button();
             button2 = new Button();
             timer1 = new System.Windows.Forms.Timer(components);
+            button3 = new Button();
             SuspendLayout();
             // 
             // button1
@@ -55,11 +56,22 @@
             timer1.Interval = 10;
             timer1.Tick += timer1_Tick_1;
             // 
+            // button3
+            // 
+            button3.Location = new Point(212, 12);
+            button3.Name = "button3";
+            button3.Size = new Size(94, 29);
+            button3.TabIndex = 2;
+            button3.Text = "IMG";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
             // Simulation3Dc
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
             Name = "Simulation3Dc";
@@ -72,5 +84,6 @@
         private Button button1;
         private Button button2;
         private System.Windows.Forms.Timer timer1;
+        private Button button3;
     }
 }

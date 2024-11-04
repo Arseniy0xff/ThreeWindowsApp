@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ThreeWindowsApp {
     public partial class Simulation3Dc : Form {
@@ -15,7 +16,10 @@ namespace ThreeWindowsApp {
 
         private Menu MainForm;
 
-        private double rsl = 0.8; // resolution
+        private double rsl = 1.0; // resolution
+        private int user_width = 0;//3840;
+        private int user_height = 0;//2160;
+
         private double[,,] buff;
         private double[,,] atm;
         private double[,,] weight;
@@ -42,8 +46,19 @@ namespace ThreeWindowsApp {
 
             this.DoubleBuffered = true;
 
+            if (user_height > 0 && user_width > 0) {
+                rsl = (double)user_width / this.ClientSize.Width;
+
+            }
+
+
             X = (int)(this.ClientSize.Width * rsl);
             Y = (int)(this.ClientSize.Height * rsl);
+
+
+            
+
+
             buff = new double[Y, X, 3];
             atm = new double[Y, X, 3];
             weight = new double[Y, X, 3];
@@ -65,34 +80,34 @@ namespace ThreeWindowsApp {
                 }
             }
 
+            DrawRectangle(atm, 1, (int)Y / 2, 1, Y / 8, true, 50);
 
-            //DrawRectangle(atm, (int)X / 2, (int)Y / 2, 4, 4,true, 100);
-            //DrawStripedCircle(atm, (int)X / 2, (int)Y / 2, 3, 100, 0);
-            DrawRectangle(atm, (int)X / 2, (int)Y / 2, 1, Y / 8, true, 50);
+            DrawRectangle(weight, 1, (int)Y / 2, X / 8, 1, true, 0);
+            DrawRectangle(weight, 1, (int)Y / 2 + Y / 8, X / 8, 1, true, 0);
 
-            DrawRectangle(weight, (int)X / 2 - X / 8, (int)Y / 2, X / 4, 1, true, 0);
-            DrawRectangle(weight, (int)X / 2 - X / 8, (int)Y / 2 + Y / 8, X / 4, 1, true, 0);
-
-            DrawRectangle(atm, (int)X / 2 - X / 8, (int)Y / 2, X / 4, 1, true, 0);
-            DrawRectangle(atm, (int)X / 2 - X / 8, (int)Y / 2 + Y / 8, X / 4, 1, true, 0);
-
-            //DrawRectangle(atm, (int)X / 2-10, (int)Y / 2, 20, 1, true, 0);
-            //DrawRectangle(atm, (int)X / 2-10, (int)Y / 2 + 4, 20, 1, true, 0);
-
-            DrawCircle(weight, (int)X / 2 + X / 8 + Y / 8, (int)Y / 2 + Y / 10 + Y / 10, Y / 8, true, 1.2);
-            DrawTriangle(weight, (int)X / 2 - X / 4, (int)Y / 2 - Y / 12, Y / 4, true, 1.2);
-
-            //for (int y = 1; y < Y - 1; y++) {
-            //    if (y < Y / 2 - 5 || y > Y / 2 + 5) {
-            //        weight[y, (int)X / 2 + X / 8] = 0;
-            //    }
+            DrawRectangle(atm, 1, (int)Y / 2, X / 8, 1, true, 0);
+            DrawRectangle(atm, 1, (int)Y / 2 + Y / 8, X / 8, 1, true, 0);
 
 
-            //}
+            DrawCircle(weight, X / 4, Y / 2, Y / 8, true, 1.2);
+            DrawCircle(weight, X / 2, Y / 2 - Y / 8, Y / 8, true, 1.2);
+            DrawCircle(weight, X / 2 + X / 8, Y / 2 + Y / 8, Y / 8, true, 1.2);
+            DrawCircle(weight, X / 2 + (X / 8) * 2, Y / 2 - Y / 10, Y / 8, true, 1.2);
 
 
-            //atm[(int)Y / 2, (int)X / 2] = 250;
-            //weight[(int)Y / 2, (int)X / 2] = 0.4;
+
+            //DrawRectangle(atm, (int)X / 2, (int)Y / 2, 1, Y / 8, true, 50);
+
+            //DrawRectangle(weight, (int)X / 2 - X / 8, (int)Y / 2, X / 4, 1, true, 0);
+            //DrawRectangle(weight, (int)X / 2 - X / 8, (int)Y / 2 + Y / 8, X / 4, 1, true, 0);
+
+            //DrawRectangle(atm, (int)X / 2 - X / 8, (int)Y / 2, X / 4, 1, true, 0);
+            //DrawRectangle(atm, (int)X / 2 - X / 8, (int)Y / 2 + Y / 8, X / 4, 1, true, 0);
+
+
+            //DrawCircle(weight, (int)X / 2 + X / 8 + Y / 8, (int)Y / 2 + Y / 10 + Y / 10, Y / 8, true, 1.2);
+            //DrawTriangle(weight, (int)X / 2 - X / 4, (int)Y / 2 - Y / 12, Y / 4, true, 1.2);
+
 
 
         }
@@ -104,7 +119,7 @@ namespace ThreeWindowsApp {
                     for (int y = 1; y < Y - 1; y++) {
                         for (int x = 1; x < X - 1; x++) {
                             buff[y, x, c] = (atm[y - 1, x, c] + atm[y + 1, x, c] + atm[y, x + 1, c] + atm[y, x - 1, c]) / 4;
-                            
+
                         }
                     }
                 }
@@ -115,7 +130,7 @@ namespace ThreeWindowsApp {
                             a[y, x, c] += (buff[y, x, c] - atm[y, x, c]) * weight[y, x, c];
                             atm[y, x, c] += a[y, x, c];
                             if (atm[y, x, c] > 0) {
-                                rndr[y, x, c] += atm[y, x, c] / 8;
+                                rndr[y, x, c] += Math.Pow(atm[y, x, c], 2);//(atm[y, x, c] / 255) * ((255 - rndr[y, x, c]) * 0.8) / 8;
                             }
 
                         }
@@ -137,13 +152,21 @@ namespace ThreeWindowsApp {
             Graphics g = e.Graphics;
 
 
+            double[,,] normalizedArray = NormalizeArray(rndr, 0, 255);
+            
+
+
             for (int y = 0; y < Y; y++) {
                 for (int x = 0; x < X; x++) {
 
                     // Нормализуем значение atm для отображения
-                    int colorValueR = (int)Math.Clamp(Math.Pow(rndr[y, x, 0] + 1, 2), 0, 255);
-                    int colorValueG = (int)Math.Clamp(Math.Pow(rndr[y, x, 1] + 1, 2), 0, 255);
-                    int colorValueB = (int)Math.Clamp(Math.Pow(rndr[y, x, 2] + 1, 2), 0, 255);
+                    //int colorValueR = (int)Math.Clamp(Math.Pow(rndr[y, x, 0] + 1, 2), 0, 255);
+                    //int colorValueG = (int)Math.Clamp(Math.Pow(rndr[y, x, 1] + 1, 2), 0, 255);
+                    //int colorValueB = (int)Math.Clamp(Math.Pow(rndr[y, x, 2] + 1, 2), 0, 255);
+
+                    int colorValueR = Math.Clamp((int)normalizedArray[y, x, 0] * 2, 0, 255);
+                    int colorValueG = Math.Clamp((int)normalizedArray[y, x, 1] * 2, 0, 255);
+                    int colorValueB = Math.Clamp((int)normalizedArray[y, x, 2] * 2, 0, 255);
 
                     //int colorValueR = (int)Math.Clamp(Math.Pow(weight[y, x, 0] + 1, 2), 0, 255);
                     //int colorValueG = (int)Math.Clamp(Math.Pow(weight[y, x, 1] + 1, 2), 0, 255);
@@ -161,6 +184,38 @@ namespace ThreeWindowsApp {
                 }
             }
         }
+
+
+        private double[,,] NormalizeArray(double[,,] array, double minRange, double maxRange) {
+            double minValue = double.MaxValue;
+            double maxValue = double.MinValue;
+
+            double[,,] normalizedArray = new double[array.GetLength(0), array.GetLength(1), 3];
+
+            // Находим минимальное и максимальное значения в массиве
+            for (int c = 0; c < 3; c++) {
+                for (int i = 0; i < array.GetLength(0); i++) {
+                    for (int j = 0; j < array.GetLength(1); j++) {
+                        if (array[i, j, c] < minValue)
+                            minValue = array[i, j, c];
+                        if (array[i, j, c] > maxValue)
+                            maxValue = array[i, j, c];
+                    }
+                }
+
+
+                // Нормализуем значения
+                for (int i = 0; i < array.GetLength(0); i++) {
+                    for (int j = 0; j < array.GetLength(1); j++) {
+                        normalizedArray[i, j, c] = (array[i, j, c] - minValue) / (maxValue - minValue) * (maxRange - minRange) + minRange;
+                    }
+                }
+            }
+
+
+            return normalizedArray;
+        }
+
 
         // Функция для рисования прямоугольника
         private void DrawRectangle(double[,,] arr, int x, int y, int width, int height, bool filled, double value) {
@@ -207,7 +262,7 @@ namespace ThreeWindowsApp {
         }
 
         // Функция для рисования полосатого круга с вертикальными полосками
-        static void DrawStripedCircle(double[,] arr, int centerX, int centerY, int radius, double value1, double value2) {
+        private void DrawStripedCircle(double[,] arr, int centerX, int centerY, int radius, double value1, double value2) {
             for (int y = -radius; y <= radius; y++) {
                 for (int x = -radius; x <= radius; x++) {
                     // Проверяем, находится ли точка внутри круга
@@ -223,6 +278,33 @@ namespace ThreeWindowsApp {
             }
         }
 
+        private void SaveArrayAsImage(double[,,] colorArray, string fileName) {
+            int width = colorArray.GetLength(1);
+            int height = colorArray.GetLength(0);
+
+            double[,,] normalizedArray = NormalizeArray(rndr, 0, 255);
+
+            using (Bitmap bitmap = new Bitmap(width, height)) {
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+
+                        // Получаем цвет из массива
+                        int colorValueR = Math.Clamp((int)normalizedArray[y, x, 0] * 2, 0, 255);
+                        int colorValueG = Math.Clamp((int)normalizedArray[y, x, 1] * 2, 0, 255);
+                        int colorValueB = Math.Clamp((int)normalizedArray[y, x, 2] * 2, 0, 255);
+
+                        // Получаем цвет из массива
+                        Color color = Color.FromArgb(colorValueR, colorValueG, colorValueB);
+                        bitmap.SetPixel(x, y, color);
+                    }
+                }
+
+                // Сохраняем изображение
+                bitmap.Save(fileName);
+            }
+
+            Debug.WriteLine($"Изображение сохранено как {fileName}");
+        }
 
 
         private void Simulation_FormClosing(object sender, FormClosingEventArgs e) {
@@ -241,6 +323,10 @@ namespace ThreeWindowsApp {
         private void button1_Click_1(object sender, EventArgs e) {
             MainForm.Show();
             this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e) {
+            SaveArrayAsImage(rndr, "render.png");
         }
     }
 }
