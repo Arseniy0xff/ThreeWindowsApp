@@ -16,7 +16,7 @@ namespace ThreeWindowsApp {
 
         private Menu MainForm;
 
-        private double rsl = 1.0; // resolution
+        private double rsl = 0.6; // resolution
         private int user_width = 0;//3840;
         private int user_height = 0;//2160;
 
@@ -31,7 +31,7 @@ namespace ThreeWindowsApp {
         private int X;
         private bool run_sim = true;
 
-        private int frame_rendering = 20;
+        private int frame_rendering = 0;
         private int frame_counter = 0;
 
 
@@ -152,7 +152,7 @@ namespace ThreeWindowsApp {
             Graphics g = e.Graphics;
 
 
-            double[,,] normalizedArray = NormalizeArray(rndr, 0, 255);
+            double[,,] normalizedArray = NormalizeArray(a, 0, 255);
             
 
 
