@@ -152,7 +152,7 @@ namespace ThreeWindowsApp {
             Graphics g = e.Graphics;
 
 
-            double[,,] normalizedArray = NormalizeArray(a, 0, 255);
+            double[,,] normalizedArray = NormalizeArray(rndr, 0, 255);
             
 
 
